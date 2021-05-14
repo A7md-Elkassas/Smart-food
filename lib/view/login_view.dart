@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:smart_food/view/home_view.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/constant.dart';
 import '../shared_component/circular_button.dart';
+import '../view/home_view.dart';
+import '../controllers/authentication.dart';
 
 class LoginView extends StatefulWidget {
   static const routeName = '/login-view';
@@ -11,6 +13,51 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  Map<String, String>? _authData = {
+    'phone': '',
+    'password': '',
+  };
+  GlobalKey<FormState> _formKey = GlobalKey();
+  Future<void> _confirmData() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        await Provider.of<Authentication>(context, listen: false)
+            .login(_authData!['phone']!, _authData!['password']!);
+      } catch (e) {
+        if (e.toString().contains('logged In')) {
+          Navigator.pushNamed(context, HomeView.routeName);
+        } else {
+          _showErrorDialog(e.toString());
+        }
+      }
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: Text('Error Occurred'),
+              content: Text(message),
+              actions: [
+                TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                ),
+              ],
+            ));
+  }
+
+  bool _isLoading = false;
   bool isVisible = false;
   @override
   Widget build(BuildContext context) {
@@ -41,6 +88,7 @@ class _LoginViewState extends State<LoginView> {
               ),
               SizedBox(height: 42),
               Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -49,6 +97,16 @@ class _LoginViewState extends State<LoginView> {
                       decoration: kTextFieldDecoration.copyWith(
                         hintText: 'رقم الهاتف',
                       ),
+                      validator: (value) {
+                        String? errorMsg;
+                        if (value!.isEmpty || value.length < 10) {
+                          errorMsg = 'Invalid Mobile Number!';
+                        }
+                        return errorMsg;
+                      },
+                      onSaved: (value) {
+                        _authData!['phone'] = value!.trim();
+                      },
                     ),
                     SizedBox(height: 20),
                     TextFormField(
@@ -76,24 +134,36 @@ class _LoginViewState extends State<LoginView> {
                                 },
                               ),
                       ),
-                    ),
-                    SizedBox(height: 43),
-                    CircularButton(
-                      child: Text(
-                        'دخول',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily:
-                              Theme.of(context).textTheme.bodyText2?.fontFamily,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 22,
-                        ),
-                      ),
-                      onPress: () {
-                        Navigator.pushNamed(context, HomeView.routeName);
+                      validator: (value) {
+                        String? errorMsg;
+                        if (value!.isEmpty || value.length < 6) {
+                          errorMsg = 'Password is too short!!';
+                        }
+                        return errorMsg;
+                      },
+                      onSaved: (value) {
+                        _authData!['password'] = value!.trim();
                       },
                     ),
+                    SizedBox(height: 43),
+                    _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : CircularButton(
+                            child: Text(
+                              'دخول',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    ?.fontFamily,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 22,
+                              ),
+                            ),
+                            onPress: _confirmData,
+                          ),
                   ],
                 ),
               ),

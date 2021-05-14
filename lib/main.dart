@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:smart_food/view/details_view.dart';
-import 'package:smart_food/view/login_view.dart';
-import 'package:smart_food/view/home_view.dart';
-import 'package:smart_food/view/splash.dart';
+import 'package:provider/provider.dart';
+
+import './view/details_view.dart';
+import './view/login_view.dart';
+import './view/home_view.dart';
+import './view/splash.dart';
+import './controllers/authentication.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,26 +14,31 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Smart Food',
-      theme: ThemeData(
-        textTheme: TextTheme(
-          bodyText1: TextStyle(
-            color: Color(0xff46200B),
-            fontFamily: 'TajawalBold',
-          ),
-          bodyText2: TextStyle(
-            fontFamily: 'Tajawal',
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: Authentication()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Smart Food',
+        theme: ThemeData(
+          textTheme: TextTheme(
+            bodyText1: TextStyle(
+              color: Color(0xff46200B),
+              fontFamily: 'TajawalBold',
+            ),
+            bodyText2: TextStyle(
+              fontFamily: 'Tajawal',
+            ),
           ),
         ),
+        home: Splash(),
+        routes: {
+          LoginView.routeName: (context) => LoginView(),
+          HomeView.routeName: (context) => HomeView(),
+          DetailsView.routeName: (context) => DetailsView(),
+        },
       ),
-      home: Splash(),
-      routes: {
-        LoginView.routeName: (context) => LoginView(),
-        HomeView.routeName: (context) => HomeView(),
-        DetailsView.routeName: (context) => DetailsView(),
-      },
     );
   }
 }
