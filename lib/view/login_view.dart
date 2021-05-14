@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_food/controllers/resturant_controller.dart';
 
 import '../constants/constant.dart';
 import '../shared_component/circular_button.dart';
@@ -18,6 +19,8 @@ class _LoginViewState extends State<LoginView> {
     'password': '',
   };
   GlobalKey<FormState> _formKey = GlobalKey();
+
+  ResturantController? resturantController = ResturantController();
   Future<void> _confirmData() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -59,6 +62,7 @@ class _LoginViewState extends State<LoginView> {
 
   bool _isLoading = false;
   bool isVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -25,7 +25,7 @@ class Resturant {
   int? delivery;
   String? open;
   String? close;
-  List<Product?>? products;
+  List<Product>? products = [];
 
   factory Resturant.fromJson(Map<String, dynamic> json) => Resturant(
         restId: json["rest_id"],
@@ -34,11 +34,11 @@ class Resturant {
         restLocation: json["rest_location"],
         restType: json["rest_type"],
         catId: json["cat_id"],
-        rate: json["rate"].toDouble(),
+        rate: json["rate"]?.toDouble()!,
         delivery: json["delivery"],
         open: json["open"],
         close: json["close"],
         products: List<Product>.from(
-            json["products"].map((x) => Product.fromJson(x))),
+            json["products"]!.map((x) => Product.fromJson(x))),
       );
 }

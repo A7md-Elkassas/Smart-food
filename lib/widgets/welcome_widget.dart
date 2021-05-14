@@ -7,7 +7,7 @@ class WelcomeWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16),
       alignment: Alignment.topRight,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'مرحبا',

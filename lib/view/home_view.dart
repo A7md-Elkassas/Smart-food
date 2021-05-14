@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import '../constants/constant.dart';
 import '../widgets/welcome_widget.dart';
 import '../widgets/decorated_appbar.dart';
+import '../controllers/resturant_controller.dart';
+import '../widgets/resturants_list.dart';
 
 class HomeView extends StatefulWidget {
   static const routeName = '/home_view';
@@ -13,15 +13,11 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  int _currentIndex = 0;
+  ResturantController? resturantController = ResturantController();
 
   int _selectedIndex = 0;
 
-  List<String> cats = [
-    'الجميع',
-    'أسماك',
-    'مشويات',
-  ];
+  List<String> cats = ['الجميع', 'أسماك', 'مشويات', 'مشروبات', 'مقبلات'];
 
   Widget _buildIcon(int index) {
     return GestureDetector(
@@ -52,25 +48,20 @@ class _HomeViewState extends State<HomeView> {
       ),
     );
   }
-  // _icons[index],
-  //       size: 25.0,
-  //       color: _selectedIndex == index
-  //           ? Theme.of(context).primaryColor
-  //           : Color(0XFFB4C1C4),
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            DecoratedAppBar(),
-            SizedBox(height: 33),
-            WelcomeWidget(),
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: SingleChildScrollView(
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              DecoratedAppBar(),
+              SizedBox(height: 33),
+              WelcomeWidget(),
+              SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -84,127 +75,9 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: 5,
-                  itemBuilder: (context, i) {
-                    return Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                    height: 108,
-                                    width: 120,
-                                    child: Image.asset(
-                                        'assets/images/item-1.png')),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'اهل الشام',
-                                          style: TextStyle(
-                                            fontFamily: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                ?.fontFamily,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                ?.color,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        RatingBar.builder(
-                                          itemSize: 15,
-                                          initialRating: 3,
-                                          minRating: 1,
-                                          direction: Axis.horizontal,
-                                          itemCount: 5,
-                                          itemPadding:
-                                              EdgeInsets.only(left: 1.0),
-                                          itemBuilder: (context, _) => Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                          ),
-                                          onRatingUpdate: (rating) {
-                                            print(rating);
-                                          },
-                                        ),
-                                        SizedBox(height: 10),
-                                        Text(
-                                          'شاورما',
-                                          style: kItemInfo,
-                                        ),
-                                        SizedBox(height: 10),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Icon(
-                                              Icons.location_on,
-                                              size: 15,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 5),
-                                            Text(
-                                              'المنصوره',
-                                              style: kItemInfo,
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 10),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Icon(
-                                              Icons.delivery_dining,
-                                              size: 15,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 5),
-                                            Text(
-                                              'المنصوره',
-                                              style: TextStyle(
-                                                color: Color(0xff787878),
-                                                fontSize: 12,
-                                                fontFamily: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2
-                                                    ?.fontFamily,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Divider(
-                              height: 1,
-                              color: Colors.grey,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-          ],
+              ResturantsList(selectedIndex: _selectedIndex),
+            ],
+          ),
         ),
       ),
     );

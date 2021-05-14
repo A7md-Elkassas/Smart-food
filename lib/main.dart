@@ -6,6 +6,9 @@ import './view/login_view.dart';
 import './view/home_view.dart';
 import './view/splash.dart';
 import './controllers/authentication.dart';
+import './controllers/resturant_controller.dart';
+import './controllers/location_controller.dart';
+import './controllers/items_controller.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,6 +20,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: Authentication()),
+        ChangeNotifierProvider.value(value: ResturantController()),
+        ChangeNotifierProvider.value(value: LocationController()),
+        ChangeNotifierProvider.value(value: ItemsController()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

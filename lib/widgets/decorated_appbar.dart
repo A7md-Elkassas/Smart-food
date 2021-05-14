@@ -18,7 +18,10 @@ class DecoratedAppBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-              onPressed: null, icon: Icon(Icons.search, color: Colors.black)),
+              onPressed: () {
+                Navigator.pushNamed(context, DetailsView.routeName);
+              },
+              icon: Icon(Icons.menu, color: Colors.black)),
           Text(
             'الرئيسية',
             style: TextStyle(
@@ -28,10 +31,7 @@ class DecoratedAppBar extends StatelessWidget {
             ),
           ),
           IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, DetailsView.routeName);
-              },
-              icon: Icon(Icons.menu, color: Colors.black)),
+              onPressed: null, icon: Icon(Icons.search, color: Colors.black)),
         ],
       ),
     );

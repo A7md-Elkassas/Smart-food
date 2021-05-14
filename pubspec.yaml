@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   flutter_rating_bar: ^4.0.0
+  geocoding: ^2.0.0
   http: ^0.13.3
   provider: ^5.0.0
   smooth_star_rating: 1.1.1
@@ -47,8 +48,9 @@ flutter:
   assets:
     - assets/images/
     - assets/images/big.png
-    - assets/images/Group 119.png
-    - assets/images/NoPath - Copy.png
+    - assets/images/splash-1.png
+    - assets/images/logo-splash.png
+    - assets/images/logo-login.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

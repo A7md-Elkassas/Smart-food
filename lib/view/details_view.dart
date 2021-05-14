@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
+
+import 'package:smart_food/controllers/resturant_controller.dart';
+import '../widgets/categories_section.dart';
 
 class DetailsView extends StatelessWidget {
   static const routeName = '/details_view';
+
   @override
   Widget build(BuildContext context) {
+    var restId = ModalRoute.of(context)!.settings.arguments as String;
+    var resturantInfo =
+        Provider.of<ResturantController>(context).findById(restId);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Directionality(
@@ -12,13 +20,6 @@ class DetailsView extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              actions: [
-                // IconButton(
-                //     icon: Icon(Icons.arrow_back_ios_outlined, size: 20),
-                //     onPressed: () {
-                //       Navigator.pop(context);
-                //     }),
-              ],
               automaticallyImplyLeading: false,
               snap: false,
               floating: false,
@@ -28,8 +29,6 @@ class DetailsView extends StatelessWidget {
                     Navigator.pop(context);
                   }),
               pinned: true,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
               expandedHeight: 250,
               collapsedHeight: 60,
               flexibleSpace: Stack(
@@ -39,24 +38,10 @@ class DetailsView extends StatelessWidget {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: ExactAssetImage('assets/images/big.png'),
+                        image: NetworkImage(resturantInfo.restImg!),
                       ),
                     ),
                   ),
-                  // Positioned(
-                  //   top: 10,
-                  //   bottom: 80,
-                  //   right: 20,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.only(left: 10),
-                  //     child: IconButton(
-                  //         icon: Icon(Icons.arrow_back_ios_outlined,
-                  //             size: 20, color: Colors.white),
-                  //         onPressed: () {
-                  //           Navigator.pop(context);
-                  //         }),
-                  //   ),
-                  // ),
                   Positioned(
                     bottom: 8,
                     right: 30,
@@ -67,7 +52,7 @@ class DetailsView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            'اهل الشام',
+                            resturantInfo.restName.toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: Theme.of(context)
@@ -79,10 +64,11 @@ class DetailsView extends StatelessWidget {
                             ),
                           ),
                           RatingBar.builder(
-                            initialRating: 5,
+                            initialRating: resturantInfo.rate!,
                             maxRating: 5,
                             minRating: 0,
                             itemSize: 15,
+                            allowHalfRating: true,
                             direction: Axis.horizontal,
                             itemCount: 5,
                             itemBuilder: (context, _) => Icon(
@@ -102,7 +88,7 @@ class DetailsView extends StatelessWidget {
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 27),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                     height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -115,7 +101,7 @@ class DetailsView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'شاورما ',
+                          resturantInfo.restType.toString(),
                           style: TextStyle(
                             fontFamily: Theme.of(context)
                                 .textTheme
@@ -132,7 +118,7 @@ class DetailsView extends StatelessWidget {
                               color: Colors.red,
                               size: 20,
                             ),
-                            Text('المنصوره'),
+                            Text('${resturantInfo.restLocation}'),
                           ],
                         ),
                         SizedBox(height: 16),
@@ -148,9 +134,12 @@ class DetailsView extends StatelessWidget {
                               color: Colors.green,
                               size: 20,
                             ),
+                            SizedBox(width: 2),
                             Text.rich(
                               TextSpan(text: 'مفتوح ', children: [
-                                TextSpan(text: 'من 10 ص الي 10 م '),
+                                TextSpan(
+                                    text:
+                                        '${resturantInfo.open}  الي ${resturantInfo.close} '),
                               ]),
                               style: TextStyle(color: Colors.black),
                             ),
@@ -164,7 +153,10 @@ class DetailsView extends StatelessWidget {
                               color: Colors.grey,
                               size: 20,
                             ),
-                            Text('مفتوح'),
+                            SizedBox(width: 2),
+                            Text(resturantInfo.delivery == 1
+                                ? 'متاح التوصيل'
+                                : 'غير متاح التوصيل'),
                           ],
                         ),
                         SizedBox(height: 16),
@@ -184,8 +176,9 @@ class DetailsView extends StatelessWidget {
                             fontSize: 20,
                           ),
                         ),
-                        SizedBox(height: 16),
-                        CategoriesSection(),
+                        CategoriesSection(
+                          id: resturantInfo.restId,
+                        ),
                       ],
                     ),
                   ),
@@ -195,89 +188,6 @@ class DetailsView extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class CategoriesSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.850,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 20,
-        ),
-        itemBuilder: (ctx, i) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Card(
-              child: ProductItem(),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class ProductItem extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.2,
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-            child: Image.asset(
-              'assets/images/item.png',
-              fit: BoxFit.cover,
-              width: double.infinity,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 9,
-        ),
-        Directionality(
-          textDirection: TextDirection.rtl,
-          child: Expanded(
-              child: Container(
-            padding: EdgeInsets.all(9),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('بطاطس سوري'),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '20ج ٫ م ',
-                        textAlign: TextAlign.right,
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.shopping_cart_outlined,
-                          color: Colors.red,
-                          size: 15,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )),
-        ),
-      ],
     );
   }
 }
