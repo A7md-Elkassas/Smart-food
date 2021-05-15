@@ -8,13 +8,14 @@ import '../models/resturant.dart';
 
 class ResturantController with ChangeNotifier {
   List<Resturant>? _resturant = [];
-
+  Resturant rest = Resturant();
   List<Resturant> get getResturant {
     return [..._resturant!];
   }
 
   Resturant findById(String id) {
-    return _resturant!.firstWhere((item) => item.restId == id);
+    return _resturant!
+        .firstWhere((item) => item.restId == id, orElse: () => Resturant());
   }
 
   Future<List<Resturant>?>? fetchResturant(int categoryId) async {

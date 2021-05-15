@@ -11,10 +11,10 @@ class DetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var restId = ModalRoute.of(context)!.settings.arguments as String;
-    var resturantInfo =
-        Provider.of<ResturantController>(context).findById(restId);
+    var resturantInfo = Provider.of<ResturantController>(context, listen: false)
+        .findById(restId);
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      //backgroundColor: Colors.transparent,
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: CustomScrollView(
@@ -88,7 +88,7 @@ class DetailsView extends StatelessWidget {
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 25),
                     height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(

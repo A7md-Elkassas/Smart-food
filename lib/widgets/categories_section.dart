@@ -27,15 +27,16 @@ class CategoriesSection extends StatelessWidget {
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.850,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 20,
+                    childAspectRatio: MediaQuery.of(context).size.width /
+                        (MediaQuery.of(context).size.height / 1.35),
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 5,
                   ),
                   itemCount: snapshot.data.length,
                   itemBuilder: (ctx, i) {
                     var meal = snapshot.data[i];
                     return ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
                       child: Card(
                         child: Column(
                           children: [
@@ -58,7 +59,6 @@ class CategoriesSection extends StatelessWidget {
                             Directionality(
                               textDirection: TextDirection.rtl,
                               child: Expanded(
-                                  child: Container(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -77,12 +77,11 @@ class CategoriesSection extends StatelessWidget {
                                         ),
                                       ),
                                     ),
+                                    Spacer(),
                                     Expanded(
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -108,7 +107,7 @@ class CategoriesSection extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              )),
+                              ),
                             ),
                           ],
                         ),
